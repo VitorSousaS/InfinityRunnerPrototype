@@ -1,0 +1,13 @@
+:root {
+}
+
+.GameOverStyle {
+    background-color: rgba(0, 0, 0, 0.71);
+    opacity: 1;
+    transition-property: opacity;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.5s;
+    flex-basis: 0;
+    justify-content: center;
+    align-items: center;
+}
