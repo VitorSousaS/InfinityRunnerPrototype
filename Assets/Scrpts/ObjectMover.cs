@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ObstacleMover : MonoBehaviour
+public class ObjectMover : MonoBehaviour
 {
     public float speed = 5f;
     private Rigidbody2D rb;
@@ -13,12 +13,15 @@ public class ObstacleMover : MonoBehaviour
     {
         if (!GameManager.isGameRunning) return;
 
-        Vector2 newPosition = rb.position + Vector2.left * speed * Time.fixedDeltaTime;
+        Vector2 moveDir = GameDirectionManager.Instance.GetDirectionVector();
+        Vector2 newPosition = rb.position + speed * Time.fixedDeltaTime * moveDir;
+
         rb.MovePosition(newPosition);
 
-        if (newPosition.x < -15f)
+        if (Mathf.Abs(newPosition.x) > 19f)
         {
             Destroy(gameObject);
         }
     }
+
 }

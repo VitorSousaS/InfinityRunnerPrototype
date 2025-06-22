@@ -2,9 +2,12 @@ using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour
 {
-    public GameObject obstaclePrefab;
+    public GameObject[] obstaclePrefabs; 
     public float spawnInterval = 2f;
-    public Transform spawnPoint;
+    public Transform spawnPointGround;
+    public Transform spawnPointAir;
+    public Transform leftSpawnPoint;
+    public Transform rightSpawnPoint;
 
     private float timer = 0f;
 
@@ -21,18 +24,18 @@ public class ObstacleSpawner : MonoBehaviour
 
     void SpawnObstacle()
     {
-        if (GameManager.isGameRunning)
-        {
-            Instantiate(obstaclePrefab, spawnPoint.position, Quaternion.identity);
-        }
-    }
+        if (!GameManager.isGameRunning) return;
 
-    public void RemoveAllObstacles()
-    {
-        ObstacleMover[] obstacles = FindObjectsByType<ObstacleMover>(FindObjectsSortMode.None);
-        foreach (ObstacleMover obstacle in obstacles)
+        int index = Random.Range(0, obstaclePrefabs.Length);
+        GameObject prefab = obstaclePrefabs[index];
+
+        Vector3 spawnPosition = prefab.name.Contains("Air") ? spawnPointAir.position : spawnPointGround.position;
+
+        if (GameDirectionManager.Instance.CurrentDirection == GameDirectionManager.Direction.Right)
         {
-            Destroy(obstacle.gameObject);
+            spawnPosition.x -= 36f;
         }
+
+        Instantiate(prefab, spawnPosition, Quaternion.identity);
     }
 }

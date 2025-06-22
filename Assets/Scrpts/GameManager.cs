@@ -47,9 +47,14 @@ public class GameManager : MonoBehaviour
         {
             Destroy(obstacle);
         }
+        foreach (var collectable in GameObject.FindGameObjectsWithTag("Collectable"))
+        {
+            Destroy(collectable);
+        }
         scoreManager.ResetScore();
         PlayerController.Instance.ResetPlayer();
         gameOverManager.HideGameOver();
+        GameDirectionManager.Instance.Reset();
 
         isGameRunning = true;
         isGameOver = false;

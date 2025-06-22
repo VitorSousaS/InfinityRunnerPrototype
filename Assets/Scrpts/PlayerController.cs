@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions inputActions;
     private bool isDead = false;
     private Vector3 initialPosition;
+    private SpriteRenderer spriteRenderer;
 
     void Awake()
     {
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
         inputActions.Gameplay.Jump.performed += OnJump;
         rb = GetComponent<Rigidbody2D>();
         initialPosition = transform.position;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Start()
@@ -43,11 +45,19 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update()
+{
+    float angleMultiplier = 1f;
+
+    if (GameDirectionManager.Instance.CurrentDirection == GameDirectionManager.Direction.Right)
     {
-        float targetAngle = Mathf.Clamp(rb.linearVelocity.y * 5f, -45f, 45f);
-        Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+        angleMultiplier = -1f;
     }
+
+    float targetAngle = Mathf.Clamp(rb.linearVelocity.y * 5f, -45f, 45f) * angleMultiplier;
+    Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
+    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+}
+
 
     private void OnJump(InputAction.CallbackContext context)
     {
@@ -73,17 +83,25 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.GameOver();
         }
     }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Collectable"))
+        {
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
+    }
     public void ResetPlayer()
     {
         isDead = false;
         isGrounded = true;
         transform.position = initialPosition;
         rb.bodyType = RigidbodyType2D.Dynamic;
+        spriteRenderer.flipX = true;
     }
 
     public void StartPlayer()
     {
-        Debug.Log("Player started");
         OnEnable();        
     }
 }
