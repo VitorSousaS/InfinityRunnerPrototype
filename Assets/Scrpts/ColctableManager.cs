@@ -19,6 +19,7 @@ public class Collectable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            GameManager.Instance.TriggerSlowMotion(0.3f, 1f);
             GameDirectionManager.Instance.ToggleDirection();
             Destroy(gameObject);
         }

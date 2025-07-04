@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -58,5 +59,21 @@ public class GameManager : MonoBehaviour
 
         isGameRunning = true;
         isGameOver = false;
+    }
+
+    public void TriggerSlowMotion(float slowScale = 0.3f, float duration = 1f)
+    {
+        StartCoroutine(SlowMotionCoroutine(slowScale, duration));
+    }
+
+    private IEnumerator SlowMotionCoroutine(float slowScale, float duration)
+    {
+        Time.timeScale = slowScale;
+        Time.fixedDeltaTime = 0.02f * slowScale;
+
+        yield return new WaitForSecondsRealtime(duration);
+
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
     }
 }
